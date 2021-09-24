@@ -2,7 +2,13 @@
   <div class="login-container">
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar"
-                 title="登录" />
+                 title="登录">
+      <template #left>
+        <!-- 后退上一页:  $router.back() 或 $router.go(-1) -->
+        <van-icon name="cross"
+                  @click="$router.back()" />
+      </template>
+    </van-nav-bar>
     <!-- /导航栏 -->
 
     <!-- 登录表单 -->
@@ -79,7 +85,7 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {},
+  
   mounted () {},
   methods: {
     
@@ -96,8 +102,8 @@ export default {
          const {data:res}= await login(user)
            console.log(res);
            this.$store.commit('set_token', res.data);
-
            this.$toast.success('登录成功！');
+           this.$router.push('./my')
       } catch (error) {
         if(error.response.status===400) 
         {console.log("手机号或密码输入错误！");
@@ -125,14 +131,14 @@ export default {
       //发送验证码
       try {
         await loginSms(this.user.mobile)
-        this.$toast('登录成功');
+        this.$toast('发送成功！');
       } catch (error) {
         if(error.response.status===429) return  this.$toast('请求过于频繁！，请稍后重试！');
       this.iscountdownshow=false
         return  this.$toast('登陆失败！请稍后重试！')
       }
 
-    }
+    },
   }
 }
 </script>
