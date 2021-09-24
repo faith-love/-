@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/src2
+/src copy - 副本
 
 
 # local env files
