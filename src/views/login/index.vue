@@ -68,8 +68,8 @@ export default {
       iscountdownshow:false,
       time:  60 * 1000,
       user:{
-        mobile:'',
-        code:''
+        mobile:16714433480,
+        code:246810
       },
       userFormRules:{
         mobile:[{

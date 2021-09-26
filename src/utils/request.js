@@ -1,10 +1,11 @@
 import axios from  "axios"
 import store from '@/store'
 
-//封装一个axio
+//封装一个axios
 
 //创建一个axios实例；优于在vue原型上添加axios，便于基地址的修改
 const request =axios.create({baseURL:'http://toutiao-app.itheima.net'}) 
+// const request =axios.create({baseURL:'http://192.168.11.56:8000'}) 
 
 // 请求拦截器   <===========增加
 request.interceptors.request.use(function (config) {
