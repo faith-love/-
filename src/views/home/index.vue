@@ -13,11 +13,7 @@
       >
     </van-nav-bar>
     <!-- /导航栏 -->
-    <!--
-animated 滑动的动画
-border 底边框线
-swipeable 开启左右手势滑动
--->
+    <!--animated 滑动的动画 border 底边框线 swipeable 开启左右手势滑动-->
     <van-tabs class="channel-tabs" v-model="active" swipeable animated border>
       <van-tab v-for="item in channels" :key="item.id" :title="item.name"
         ><article_list :channel="item"></article_list
@@ -29,31 +25,52 @@ swipeable 开启左右手势滑动
       <template #nav-right>
         <!-- 占位元素 -->
         <div class="placeholder"></div>
-        <div class="hamburger-btn">
+        <div class="hamburger-btn" @click="isChannelsShow = true">
           <i class="Toutiao Toutiao-gengduo"></i>
         </div>
       </template>
     </van-tabs>
     <!-- /频道列表 -->
+    <!-- 图标位置 -->
+    <van-popup
+      v-model="isChannelsShow"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+      <Channel_edit
+        :channel_list="channels"
+        :active="active"
+        @tiggle_active="change_active"
+      ></Channel_edit>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from "@/api/user";
 import article_list from "./compononts/article_list.vue";
+import Channel_edit from "./compononts/channel_edit";
+import { mapState } from "vuex";
+import { getItem } from "@/utils/storage";
 export default {
   name: "HomeIndex",
   components: {
-    article_list
+    article_list,
+    Channel_edit
   },
   props: {},
   data() {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      isChannelsShow: false
     };
   },
-  computed: {},
+  computed: {
+    ...mapState(["user"])
+  },
   watch: {},
   created() {
     this.getUserChannels();
@@ -61,14 +78,27 @@ export default {
   mounted() {},
   methods: {
     async getUserChannels() {
-      try {
+      if (this.user) {
+        try {
+          const { data: res } = await getUserChannels();
+          // console.log(res.data.channels);
+          this.channels = res.data.channels;
+        } catch (error) {
+          console.log(error);
+          this.$toast("获取频道数据失败");
+        }
+      } else if (getItem("article_channels")) {
+        this.channels = getItem("article_channels");
+      }else{
         const { data: res } = await getUserChannels();
-        // console.log(res.data.channels);
-        this.channels = res.data.channels;
-      } catch (error) {
-        console.log(error);
-        this.$toast("获取频道数据失败");
+          // console.log(res.data.channels);
+          this.channels = res.data.channels;
       }
+    },
+
+    change_active(val, isChannelsShow = true) {
+      this.active = val;
+      this.isChannelsShow = isChannelsShow;
     }
   }
 };

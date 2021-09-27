@@ -22,7 +22,7 @@
       <div class="label-info-wrap">
         <span>{{ article.aut_name }}</span>
         <span>{{ article.comm_count }}评论</span>
-        <span>{{ article.pubdate }}</span>
+        <span>{{ article.pubdate | relativeTime }}</span>
       </div>
     </template>
 
@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'ArticleItem',
+  name: "ArticleItem",
   components: {},
   props: {
     article: {
@@ -46,15 +46,15 @@ export default {
       required: true
     }
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   watch: {},
-  created () {},
-  mounted () {},
+  created() {},
+  mounted() {},
   methods: {}
-}
+};
 </script>
 
 <style scoped lang="less">
