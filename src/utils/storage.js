@@ -1,33 +1,23 @@
-// 封装本地存储操作模块
-
-
 //存储数据
-export  const  setItem=(key,value)=>{
-  if(typeof value==='object') {
-    value=JSON.stringify(value)
+
+export const setItem = (key, val) => {
+  if (typeof val === "object") {
+   val= JSON.stringify(val);
   }
-  return localStorage.setItem(key,value)
-}
+  return localStorage.setItem(key, val);
+};
 
-
-//读取数据
-
-export  const getItem=key=>{
- const data= localStorage.getItem(key)
-try {
-
-  //如果其为字符串会报错，进入catch里面；无需if判断
-   return JSON.parse(data)
-} catch (error) {
-   return data
-}
-}
-
+//获取数据
+export const getItem = key => {
+  const res = localStorage.getItem(key);
+  try {
+    return JSON.parse(res);
+  } catch (error) {
+    return res;
+  }
+};
 
 //移除数据
-export  const  removeItem=key=>{
-  localStorage.removeItem(key)
-}
-
-
- 
+export const removeItem = key => {
+  localStorage.removeItem(key);
+};
