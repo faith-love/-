@@ -1,17 +1,25 @@
-import request from '@/utils/request.js'
-
-
-export const getUserArticle=()=>{
+export const getAllChannels = () => {
   return request({
-    method: 'GET',
-    url:"/v1_0/user/channels"
-  })
-}
+    method: "GET",
+    url: "/v1_0/channels"
+  });
+};
 
-export const getNewsArticle=params=>{
+//add
+export const add_channel = channel => {
   return request({
-    method: 'GET',
-    url:"/v1_1/articles",
-    params
-  })
-}
+    method: "PATCH",
+    url: "/v1_0/user/channels",
+    data: {
+      channels: [channel]
+    }
+  });
+};
+
+//del
+export const del_channel = target => {
+  return request({
+    method: "DELETE",
+    url: `/v1_0/user/channels/${target}`
+  });
+};

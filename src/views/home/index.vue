@@ -24,46 +24,93 @@ swipeable 开启左右手势滑动
       <!-- 占位元素 -->
       <div slot="nav-right">
         <div class="placeholder"></div>
-        <!-- 右侧按钮 -->
-        <div class="hamburger-btn" slot="nav-right">
+
+        <div class="hamburger-btn" @click="isPopupshow = true">
+
           <i class="Toutiao Toutiao-gengduo"></i>
         </div>
       </div>
     </van-tabs>
     <!-- /频道列表 -->
+    <!-- 图标位置 -->
+    <van-popup
+      class="edit-channel-popup "
+      v-model="isPopupshow"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+      ><ChannelEdit
+        :channels="channels"
+        :active="active"
+        @change_active="changeActive"
+      ></ChannelEdit
+    ></van-popup>
   </div>
 </template>
 
 <script>
-import { getUserArticle } from "@/api/article";
-import Art_list from './article_list/index.vue'
+
+import { getUserChannels } from "@/api/user";
+import article_list from "./compononts/article_list.vue";
+import ChannelEdit from "./compononts/channel_edit";
+import { mapState } from "vuex";
+import { getItem } from "@/utils/storage";
+
+
 export default {
   name: "HomePage",
   components: {
-    Art_list
+
+    article_list,
+    ChannelEdit
+
   },
   props: {},
   data() {
     return {
       active: 0,
-      Article_list:{}
+      channels: [],
+      isPopupshow: true
     };
   },
-  computed: {},
+  computed: {
+    ...mapState(["user"])
+  },
   watch: {},
   created() {
     this.getUserArtList();
   },
   mounted() {},
   methods: {
-    async getUserArtList() {
-      try {
-        const {data:res} = await getUserArticle();
-        console.log(res);
-        this.Article_list=res.data.channels
-      } catch (error) {
-        console.log(error);
+
+    async getUserChannels() {
+      if (this.user) {
+        try {
+          const { data: res } = await getUserChannels();
+          // console.log(res.data.channels);
+          this.channels = res.data.channels;
+        } catch (error) {
+          console.log(error);
+          this.$toast("获取频道数据失败");
+        }
+      } else if(getItem("userChannels")) {
+       this.channels= getItem("userChannels");
+      }else{
+        try {
+          const { data: res } = await getUserChannels();
+          // console.log(res.data.channels);
+          this.channels = res.data.channels;
+        } catch (error) {
+          console.log(error);
+          this.$toast("获取频道数据失败");
+        }
+
       }
+    },
+    changeActive(index, isPopupshow = true) {
+      this.isPopupshow = isPopupshow;
+      this.active = index;
     }
   }
 };
@@ -136,6 +183,9 @@ export default {
       background-image: url(~@/assets/gradient-gray-line.png);
       background-size: contain;
     }
+  }
+  .edit-channel-popup {
+    box-sizing: border-box;
   }
 }
 </style>

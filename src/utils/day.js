@@ -1,19 +1,19 @@
-import dayjs from 'dayjs'
-import Vue from 'vue'
+import Vue from "vue";
+import dayjs from "dayjs";
 
 //加载中文语言包
 
-import 'dayjs/locale/zh-cn' // ES 2015 
+import "dayjs/locale/zh-cn"; // ES 2015
 
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from "dayjs/plugin/relativeTime";
 
-dayjs.extend(relativeTime)
+// 配置使用处理相对时间的插件
+dayjs.extend(relativeTime);
 
 // 配置使用中文语言包
-dayjs.locale('zh-cn')
+dayjs.locale("zh-cn");
 
- // in 2 years
-
-Vue.filter('dateFormate',(data)=>{
-  return dayjs().to(dayjs(value))
-})
+// 全局过滤器：处理相对时间
+Vue.filter("relativeTime", value => {
+  return dayjs().to(dayjs(value));
+});
