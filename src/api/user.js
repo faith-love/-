@@ -17,13 +17,6 @@ export  const getMsg = mobile=>{
   })
 }
 
-export  const tologin = data =>{
-  return request({
-    method:"POST",
-    url:`/v1_0/authorizations`,
-    data
-  })
-}
 
 export  const getuserinfo = () =>{
   return request({

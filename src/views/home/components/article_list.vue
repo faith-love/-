@@ -24,7 +24,7 @@
         <article_item
           v-for="(article, index) in list"
           :key="index"
-          :article='article'
+          :article="article"
         ></article_item>
         <!-- <van-cell
           v-for="(article, index) in list"
@@ -38,7 +38,7 @@
 
 <script>
 import { getChannelsNewsArticles } from "@/api/user"; // <====== 导入方法
-import article_item from "@/components/article-item;
+import article_item from "@/components/article-item";
 export default {
   name: "ArticleList",
   components: {

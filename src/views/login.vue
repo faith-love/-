@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { login, getMsg, tologin } from "@/api/user";
+import { login, getMsg } from "@/api/user";
 
 export default {
   data() {
@@ -77,7 +77,7 @@ export default {
         ],
         code: [
           { required: true, message: "请填写验证码" },
-          { pattern: /^\d{6}$ /, message: "验证码格式错误" }
+          { pattern: /^\d{6}/, message: "验证码格式错误" }
         ]
       }
     };
