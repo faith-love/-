@@ -1,24 +1,25 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue'
+import Vuex from 'vuex'
 import {setItem,getItem} from '@/utils/storage'
 
-Vue.use(Vuex);   
-const LOGIN_TOKeN='login_token'
-
+Vue.use(Vuex)
+const TOKEN_KEY='toutiao_user'
 export default new Vuex.Store({
   state: {
-    token: getItem(LOGIN_TOKeN)
+    user:getItem(TOKEN_KEY)
   },
   mutations: {
- 
-    set_token(state, data) {
-      state.token = data;
-      //创建本地存储；封装一个存储模块
-      setItem(LOGIN_TOKeN,data)
-    
+    set_token(state,data){
+      state.user=data,
+      setItem(TOKEN_KEY,data)
     }
   },
-  actions: {},
-  modules: {}
-});
+  actions: {
+  },
+  modules: {
+  }
+})
 
+
+
+ 
