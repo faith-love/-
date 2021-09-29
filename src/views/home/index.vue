@@ -52,7 +52,7 @@ swipeable 开启左右手势滑动
 <script>
 
 import { getUserChannels } from "@/api/user";
-import article_list from "./compononts/article_list.vue";
+import article_list from "./components/article_list.vue";
 import ChannelEdit from "./compononts/channel_edit";
 import { mapState } from "vuex";
 import { getItem } from "@/utils/storage";
