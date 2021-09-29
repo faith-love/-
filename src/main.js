@@ -10,8 +10,8 @@ import Vant from "../node_modules/vant/lib/"
 import 'vant/lib/index.css';
 import "amfe-flexible"
 
-//时间过滤器
-import '@/utils/day.js'
+//导入时间处理函数
+import '@/utils/day'
 
 Vue.use(Vant)
 Vue.config.productionTip = false

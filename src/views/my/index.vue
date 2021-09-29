@@ -1,21 +1,15 @@
 <template>
   <div class="my-container">
-
     <!-- 已登录 -->
-    <div v-if="user"
-         class="header user-info">
+    <div v-if="token" class="header user-info">
       <!-- 用户信息 -->
       <div class="base-info">
         <div class="left">
-          <van-image class="avatar"
-                     round
-                     fit="cover"
-                     :src="userinfo.photo" />
+          <van-image class="avatar" round fit="cover" src="userinfo.photo" />
           <span class="name">{{userinfo.name}}</span>
         </div>
         <div class="right">
-          <van-button size="mini"
-                      round>编辑资料</van-button>
+          <van-button size="mini" round>编辑资料</van-button>
         </div>
       </div>
       <!-- 用户数据 -->
@@ -39,19 +33,14 @@
       </div>
     </div>
     <!-- 未登录 -->
-    <div v-else
-         class="header not-login">
-      <div class="login-btn"
-           @click="$router.push('/login')">
-        <img class="mobile-img"
-             src="~@/assets/mobile.png">
+    <div v-else class="header not-login">
+      <div class="login-btn" @click="$router.push('/login')">
+        <img class="mobile-img" src="~@/assets/mobile.png" />
         <span class="text">登录&nbsp;/&nbsp;注册</span>
       </div>
     </div>
     <!-- 宫格导航 -->
-    <van-grid class="grid-nav mb-9"
-              :column-num="2"
-              clickable>
+    <van-grid class="grid-nav mb-9" :column-num="2" clickable>
       <van-grid-item class="grid-item">
         <template #icon>
           <i class="Toutiao Toutiao-shoucang"></i>
@@ -71,63 +60,51 @@
     </van-grid>
     <!-- /宫格导航 -->
     <!-- 单元格导航 -->
-    <van-cell title="消息通知"
-              is-link />
-    <van-cell class="mb-9"
-              title="小智同学"
-              is-link />
-    <van-cell v-if="user"
-              class="logout-cell"
-              clickable
-              title="退出登录"
-              @click="onLoginOut" />
+    <van-cell title="消息通知" is-link />
+    <van-cell class="mb-9" title="小智同学" is-link />
+    <van-cell
+      v-if="token"
+      class="logout-cell"
+      clickable
+      title="退出登录"
+      @click="set_token(null)"
+    />
   </div>
 </template>
 <script>
-import {mapState} from 'vuex' 
-import {getUserInfo} from '@/api/user'
+import { mapState, mapMutations } from "vuex";
+import { getuserinfo } from "@/api/user";
 export default {
   name: "MyIndex",
   data() {
     return {
-      userinfo:{}
+      userinfo: {}
     };
   },
- created () {
-    if(this.user){
-      this.onloadUserInfo()
+  created() {
+    if (this.token) {
+      this.getUserInfo();
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(["token"])
   },
-  methods: {  
-        onLoginOut(){
-          this.$dialog.confirm({
-      title: '标题',
-      message: '弹窗内容',
-    })
-      .then(() => {
-        this.$store.commit('set_token', null);
-      })
-      .catch(() => {
-        // on cancel
-        console.log(error);
-      });
-    },
-    async onloadUserInfo(){
-        try {
-          const {data:res}= await getUserInfo()
-          console.log(res);
-          this.userinfo=res.data
+  methods: {
+    //退出
+    ...mapMutations(["set_token"]),
+    //获取个人信息
 
-        } catch (error) {
-          console.log(error);
-          this.$toast("获取用户信息失败！请重新登录！")
-        }
+    async getUserInfo() {
+      try {
+        const { data: res } = await getuserinfo();
+        console.log(res);
+        this.userinfo = res.data;
+      } catch (error) {
+        return console.log(error);
+      }
     }
   },
-  components: {},
+  components: {}
 };
 </script>
 <style scoped lang="less">

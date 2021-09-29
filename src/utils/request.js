@@ -22,6 +22,6 @@ request.interceptors.request.use(function (config) {
 
 // 响应拦截器
 
-export default request
+export default  request
 
 

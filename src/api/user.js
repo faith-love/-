@@ -1,49 +1,33 @@
-import request from "@/utils/request";
-// import store from '../store/index'
+import  {request} from  '../utils/request.js'
+// import store from '@/store'
 
 
-export const login = data => {
+export  const login = (data) =>{
   return request({
-    method: "POST",
-    url: "/v1_0/authorizations",
+    method:"POST",
+    url:'/v1_0/authorizations',
     data
-  });
-};
+  })
+}
 
-export const loginSms = mobile => {
+export  const getMsg = mobile=>{
   return request({
-    method: "GET",
-    url: `/v1_0/sms/codes/${mobile}`,
-  });
-};
+    method:"GET",
+    url:`/v1_0/sms/codes/${mobile}`,
+  })
+}
 
-export const getUserInfo = () => {
+export  const tologin = data =>{
   return request({
-    method: "GET",
-    url: `/v1_0/user`,
-    // headers:{
-    //   Authorization:`Bearer ${store.state.user.token}`
-    // }
-  });
-};
+    method:"POST",
+    url:`/v1_0/authorizations`,
+    data
+  })
+}
 
-// 获取用户频道列表
-export const getUserChannels = () => {
+export  const getuserinfo = () =>{
   return request({
-    method: "GET",
-    url: `/v1_0/user/channels`,
-    // headers:{
-    //   Authorization:`Bearer ${store.state.user.token}`
-    // }
-  });
-};
-
-
-// 获频道新闻数据
-export const getChannelsNewsArticles = params => {
-  return request({
-    method: "GET",  
-    url: '/v1_1/articles',
-    params
-  });
-};
+    method:"GET",
+    url:`/v1_0/user`,
+  })
+}
