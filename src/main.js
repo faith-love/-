@@ -4,11 +4,14 @@ import router from './router'
 import store from './store'
 // 加载全局样式
 import './styles/index.less'
-import '@/utils/day.js'
+
 //vant组件库
 import Vant from "../node_modules/vant/lib/"
 import 'vant/lib/index.css';
 import "amfe-flexible"
+
+//时间过滤器
+import '@/utils/day.js'
 
 Vue.use(Vant)
 Vue.config.productionTip = false

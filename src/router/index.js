@@ -15,7 +15,11 @@ const router = new VueRouter({
       component: () => import("../views/layout"),
       redirect: "/home",
       children: [
-        { path: "/home", name: "home", component: () => import("../views/home") },
+        {
+          path: "/home",
+          name: "home",
+          component: () => import("../views/home")
+        },
         { path: "/qa", name: "qa", component: () => import("../views/qa") },
         {
           path: "/video",
@@ -24,6 +28,18 @@ const router = new VueRouter({
         },
         { path: "my", name: "my", component: () => import("../views/my") }
       ]
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("@/views/search")
+    },
+    //配置文章列表动态路由
+    {
+      path: "/article/:articleId",
+      name: "article",
+      component: () => import("@/views/article"),
+      props: true
     }
   ]
 });

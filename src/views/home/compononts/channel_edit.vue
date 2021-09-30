@@ -8,25 +8,25 @@
         plain
         round
         size="mini"
-        @click="isdone_edit = !isdone_edit"
-        >{{ isdone_edit ? "完成" : "编辑" }}</van-button
+        @click="isEdit = !isEdit"
+        >{{ isEdit ? "完成" : "编辑" }}</van-button
       >
     </van-cell>
     <van-grid class="my-grid" :gutter="10">
       <van-grid-item
         class="grid-item"
-        v-for="(item, index) in channels"
+        v-for="(item, index) in channel_list"
         :key="index"
-        @click="tiggle_channel(item, index)"
+        @click="onMyChannelClick(item, index)"
       >
         <van-icon
           slot="icon"
           name="clear"
-          v-show="isdone_edit && !fixedChannels.includes(item.id)"
+          v-show="isEdit && !fixedChannels.includes(item.id)"
         ></van-icon>
-        <span class="text"
-        :class="{ active: index === active }"
-         slot="text">{{ item.name }}</span>
+        <span class="text" slot="text" :class="{ active: active === index }">{{
+          item.name
+        }}</span>
       </van-grid-item>
     </van-grid>
 
@@ -36,12 +36,12 @@
     </van-cell>
     <van-grid class="recommend-grid" :gutter="10">
       <van-grid-item
-        v-for="(item, index) in recommendChannels"
-        :key="index"
         class="grid-item"
         icon="plus"
         :text="item.name"
-        @click="add_channels(item)"
+        v-for="item in recommendChannels"
+        :key="item.id"
+        @click="onAddChannels(item)"
       />
     </van-grid>
     <!-- /频道推荐 -->
@@ -49,14 +49,14 @@
 </template>
 
 <script>
-import { getAllChannels, add_channel, del_channel } from "@/api/article";
+import { getAllChannels, addChannels, delChannels } from "@/api/channels";
 import { mapState } from "vuex";
 import { setItem } from "@/utils/storage";
 export default {
   name: "ChannelEdit",
   components: {},
   props: {
-    channels: {
+    channel_list: {
       type: Array,
       required: true
     },
@@ -67,71 +67,86 @@ export default {
   },
   data() {
     return {
-      AllChannels: [],
-      isdone_edit: false,
-      fixedChannels: [0]
+      allChannelList: [],
+      isEdit: false,
+      fixedChannels: [0] //数组形式
     };
   },
   computed: {
     ...mapState(["user"]),
     recommendChannels() {
-      return this.AllChannels.filter(item => {
-        return !this.channels.find(item2 => item2.id === item.id);
+      const remChannels = [];
+      this.allChannelList.filter(item1 => {
+        const res = this.channel_list.find(item2 => item2.id === item1.id);
+        if (!res) {
+          remChannels.push(item1);
+        }
       });
+      return remChannels;
+
+      // return this.allChannelList.filter(item1=>{
+      //  if(!this.channel_list.find(item2=>item2.id===item1.id)) remChannels.push(item1);
+      //  return
+      // })
     }
   },
   watch: {},
   created() {
-    this.getAllChannel();
+    this.getChannelList();
   },
   mounted() {},
   methods: {
-    async getAllChannel() {
+    async getChannelList() {
       try {
         const { data: res } = await getAllChannels();
-        this.AllChannels = res.data.channels;
         console.log(res);
+        this.allChannelList = res.data.channels;
+      } catch (error) {
+        console.log(error);
+        this.$toast("所有频道列表获取失败！");
+      }
+    },
+    async onAddChannels(item) {
+      this.channel_list.push(item);
+      //登录与未登录状态下频道列表的存储
+      try {
+        if (this.user) {
+          //登录状态下的操作
+          await addChannels({
+            id: item.id,
+            seq: this.channel_list.length
+          });
+        } else {
+          //为登录状态下的操作
+          setItem("article_channels", this.channel_list);
+        }
       } catch (error) {
         console.log(error);
       }
     },
 
-    async tiggle_channel(item, index) {
-      if (this.isdone_edit) {
-        //del
-
-        this.channels.splice(index, 1);
-        if (this.user) {
-          try {
-            await del_channel(item.id);
-            if (index <= this.active) {
-              this.$emit("change_active", this.active - 1);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          setItem("userChannels", this.channels);
+    async delUserChannel(data) {
+      try {
+        if(this.user){
+          await delChannels(data)
+        }else{
+          setItem('article_channels',this.channel_list)
         }
-      } else {
-        this.$emit("change_active", index, false);
+      } catch (error) {
+        console.log(error);
       }
     },
-
-    async add_channels(item) {
-      this.channels.push(item);
-      if (this.user) {
-        try {
-          const res = await add_channel({
-            id: item.id,
-            seq: this.channels.length
-          });
-          console.log(res);
-        } catch (error) {
-          console.log(error);
+    onMyChannelClick(item, index) {
+      if (this.isEdit) {
+        if (this.fixedChannels.includes(item.id)) return false;
+        this.channel_list.splice(index, 1);
+        this.delUserChannel(item.id)
+        if (index <= this.active) {
+          this.$emit("tiggle_active", this.active - 1);
         }
       } else {
-        setItem("userChannels", this.channels);
+        //完成状态时执行的操作
+        this.$emit("tiggle_active", index, false);
       }
     }
   }

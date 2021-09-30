@@ -1,28 +1,26 @@
 import request from '@/utils/request'
 
-export const getAllChannels=()=>{
-return request ({
-  method:'GET',
-  url:'/v1_0/channels',
-})
+export const getArticleDetail=(article_id)=>{
+  return request({
+    method:"GET",
+    url:`/v1_0/articles/${article_id}`
+  })
 }
-
-
-//add 
-export const add_channel=channel=>{
-  return request ({
-    method:'PATCH',
-    url:'/v1_0/user/channels',
+//添加关注
+export const getFollow=(target)=>{
+  return request({
+    method:"POST",
+    url:`/v1_0/user/followings`,
     data:{
-      channels:[channel]
+      target
     }
   })
-  }
+}
 
-  //del
-export const del_channel=target=>{
-  return request ({
-    method:'DELETE',
-    url:`/v1_0/user/channels/${target}`,
+//取消关注
+export const cancelFollow=(target)=>{
+  return request({
+    method:"DELETE",
+    url:`/v1_0/user/followings/${target}`
   })
-  }
+}
