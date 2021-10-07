@@ -26,6 +26,7 @@
           comment.pubdate | relativeTime
         }}</span>
         <van-button class="reply-btn" round
+        @click="$emit('replay_show',comment)"
           >回复 {{ comment.reply_count }}</van-button
         >
       </div>
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-import { addCommentLike, cancelCommentLike } from "@/api/article";
+import { addCommentLike, cancelCommentLike } from "@/api/comment";
 export default {
   name: "CommentItem",
   props: {
@@ -54,13 +55,11 @@ export default {
       this.commentLoading = true;
       try {
         if (this.comment.is_liking) {
-          console.log(this.comment);
-          await cancelCommentLike(this.comment.com_id.c[1]);
+          console.log(this.comment.com_id.toString());
+          await cancelCommentLike(this.comment.com_id.toString());
           this.comment.like_count--;
         } else {
-
-          await addCommentLike(this.comment.com_id.c[1]);
-          console.log(this.comment);
+          await addCommentLike(this.comment.com_id.toString());
           this.comment.like_count++;
         }
         this.comment.is_liking = !this.comment.is_liking;
@@ -123,9 +122,6 @@ export default {
     .van-icon {
       font-size: 30px;
     }
-  }
-  .liked {
-    background-color: orange;
   }
   /deep/ .active {
     .van-icon {

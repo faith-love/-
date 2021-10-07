@@ -29,3 +29,14 @@ export const cancelCommentLike=(commentId)=>{
   })
 }
 
+
+
+//发布文章评论或评论回复
+
+export const addComment =(data)=>{
+  return request({
+    method: "POST",
+    url: `/v1_0/comments`,
+    data
+  })
+}
