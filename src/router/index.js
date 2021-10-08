@@ -40,6 +40,12 @@ const router = new VueRouter({
       name: "article",
       component: () => import("@/views/article"),
       props: true
+    },
+    //配置用户编辑页面
+    {
+      path: "/user/profile",
+      name: "user-profile",
+      component: () => import("@/views/user-profile")
     }
   ]
 });

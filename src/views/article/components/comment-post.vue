@@ -10,7 +10,12 @@
       placeholder="请输入留言"
       show-word-limit
     />
-    <van-button class="post-btn" @click="add_comment" :disabled='!message.length'>发布</van-button>
+    <van-button
+      class="post-btn"
+      @click="add_comment"
+      :disabled="!message.length"
+      >发布</van-button
+    >
   </div>
 </template>
 
@@ -18,10 +23,24 @@
 import { addComment } from "@/api/comment";
 export default {
   name: "CommentPost",
+
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
       required: true
+    },
+    type: {
+      type: String,
+      dafault: "a",
+      validator(val) {
+        return ["a", "c"].includes(val);
+      }
     }
   },
   data() {
@@ -44,14 +63,14 @@ export default {
         const { data: res } = await addComment({
           target: this.target.toString(),
           content: this.message,
-          art_id: null
+          art_id: this.type === "a" ? null : this.articleId.toString()
         });
         console.log(res.data);
         this.$toast("添加文章评论成功！");
         //清空文本框
         this.message = "";
         // 关闭弹出层
-        this.$emit("show",res.data);
+        this.$emit("show", res.data);
         // 将发布内容显示到列表顶部
       } catch (error) {
         console.log(error);

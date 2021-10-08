@@ -111,13 +111,12 @@
     </div>
 
     <!------------------------ 评论回复 ------------------------------>
-    <van-popup
-      v-model="isReplyShow"
-      position="bottom"
-      style="height: 100%"
-    >
-      
-      <CommentReply :comment_replay="comment_replay" @close='isReplyShow=false'  v-if="isReplyShow" />
+    <van-popup v-model="isReplyShow" position="bottom" style="height: 100%">
+      <CommentReply
+        :comment_replay="comment_replay"
+        @close="isReplyShow = false"
+        v-if="isReplyShow"
+      />
     </van-popup>
     <!------------------------ /评论回复 ------------------------------>
   </div>
@@ -142,6 +141,11 @@ export default {
     CommentList,
     CommentPost,
     CommentReply
+  },
+  provide: function() {
+    return {
+      articleId: this.articleId // 或者写成 this.$route.params.articleId  也可以
+    };
   },
   props: {
     // 使用props获取动态路由的数据

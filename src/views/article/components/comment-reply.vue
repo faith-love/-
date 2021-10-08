@@ -1,39 +1,51 @@
 <template>
   <div class="comment-reply">
-    <van-nav-bar :title="comment_replay.reply_count > 0 ?`${comment_replay.reply_count}条回复`:'暂无评论'"
-      ><van-icon slot="left" name="cross"  @click="$emit('close')" />
-     
+    <van-nav-bar
+      :title="
+        comment_replay.reply_count > 0
+          ? `${comment_replay.reply_count}条回复`
+          : '暂无评论'
+      "
+      ><van-icon slot="left" name="cross" @click="$emit('close')" />
     </van-nav-bar>
-     <div class="scroll-wrap">
+    <div class="scroll-wrap">
       <!-- 当前评论项 -->
-       <comment_item  :comment="comment_replay"/>
+      <!-- 当前评论项 -->
+      <comment_item :comment="comment_replay" />
       <!-- /当前评论项 -->
-      <van-cell title='全部回复'/>
+      <van-cell title="全部回复" />
+      <!-- /当前评论项 -->
       <!-- 评论的回复列表 -->
-      <CommentList type='c' :articleId='comment_replay.com_id'/>
+      <CommentList type="c" :articleId="comment_replay.com_id" :list='commentList' />
       <!-- /评论的回复列表 -->
-
     </div>
-     <!-- 底部区域 -->
+    <!-- 底部区域 -->
     <div class="reply-bottom">
       <van-button
         class="write-btn"
         size="small"
         round
-      >写评论</van-button>
+        @click="isPostShow = true"
+        >写评论</van-button
+      >
     </div>
     <!-- /底部区域 -->
-   
+    <!-- 发布评论 -->
+    <van-popup v-model="isPostShow" position="bottom">
+      <CommentPost :target="comment_replay.com_id" type="c" @show="onreplay" />
+    </van-popup>
+    <!-- /发布评论 -->
   </div>
 </template>
 
 <script>
 import comment_item from "./comment-item";
 import CommentList from "./comment-list";
+import CommentPost from "./comment-post";
 
 export default {
   name: "CommentReply",
-  components: { comment_item ,CommentList},
+  components: { comment_item, CommentList, CommentPost },
   props: {
     comment_replay: {
       type: Object,
@@ -41,13 +53,22 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      isPostShow: false,
+      commentList: []
+    };
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    onreplay(val) {
+      this.isPostShow = false;
+      this.comment_replay.reply_count++;
+      this.commentList.unshift(val.new_obj);
+    }
+  }
 };
 </script>
 <style scoped lang="less">

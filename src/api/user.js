@@ -47,3 +47,34 @@ export const getChannelsNewsArticles = params => {
     params
   });
 };
+
+
+// 获取用户个人信息
+export const getUserProfile = () => {
+  return request({
+    method: "get",  
+    url: `/v1_0/user/profile`,
+  });
+};
+
+
+// 获取用户个人信息
+export const editUserProfile = (data) => {
+  return request({
+    method: "PATCH",  
+    url: `/v1_0/user/profile`,
+    data
+  });
+};
+
+
+/**
+ * 更新用户照片资料
+ */
+ export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/photo',
+    data
+  })
+}

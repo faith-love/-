@@ -8,7 +8,8 @@ import './styles/index.less'
 //vant组件库
 import Vant from "../node_modules/vant/lib/"
 import 'vant/lib/index.css';
-import "amfe-flexible"
+import "amfe-flexible";
+import 'cropperjs/dist/cropper.css';
 
 //时间过滤器
 import '@/utils/day.js'
